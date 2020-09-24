@@ -6,13 +6,14 @@ public with sharing class GOLF_SyncSwingU_Handler {
      - Add Rounds holes
      */         
     Set<String> courseIdSet = new Set<String>();
-    List<String> roundIdList;
     Set<String> sfCourseIdSet = new Set<String>();
+    Set<String> sfRoundIdSet = new Set<String>();
     Map<String,String> courseIdNameMap = 
         new Map<String,String>();
-    Map<String,List<String>> playerRoundIdMap = 
-        new Map<String,List<String>>();
+    Map<String,Golf_Wrapper.Round> roundIdRoundMap = 
+        new Map<String,Golf_Wrapper.Round>();
     List<Course__c> newCourseList = new List<Course__c>();
+    List<Round__c> newRoundList = new List<Round__c>();
 
     public void handleGolfInfo() {
         List<Player__c> playerList = [
@@ -27,7 +28,6 @@ public with sharing class GOLF_SyncSwingU_Handler {
 
         // Get Courses that player has played
         for (Golf_Wrapper.Player playerWrapper : playerWrapperList) {
-            roundIdList = new List<String>();
             for (Golf_Wrapper.Round round : playerWrapper.rounds) {
                 if (String.isNotBlank(round.scorecards[0].playerId) &&
                 String.isBlank(playerWrapper.playerId)) {
@@ -41,11 +41,13 @@ public with sharing class GOLF_SyncSwingU_Handler {
                     }
                 }
                 if (String.isNotBlank(round.roundId)) {
-                    roundIdList.add(round.roundId);
+                    Golf_Wrapper.Round roundInstance = new Golf_Wrapper.Round();
+                    roundInstance.playerId = playerWrapper.playerId;
+                    roundInstance.courseId = round.courseId;
+                    roundIdRoundMap.put(round.roundId, roundInstance);
                 }
             }
-            playerRoundIdMap.put(
-                playerWrapper.playerId, roundIdList);
+            
         }
 
         // Courses that exist in SF
@@ -68,6 +70,30 @@ public with sharing class GOLF_SyncSwingU_Handler {
                 }
             }
             insert newCourseList;
+        }
+
+        // Round that exist in SF
+        List<Round__c> sfRoundList = [
+            SELECT Id, Name, External_Id__c 
+            FROM Round__c 
+            WHERE External_Id__c IN :roundIdRoundMap.keySet()];
+    
+
+        for (Round__c roundFromQuery : sfRoundList) {
+            sfRoundIdSet.add(roundFromQuery.External_Id__c);
+        }
+
+        // Avoiding inserting rounds that already exist in SF
+        if (roundIdRoundMap.keyset().size() > sfRoundIdSet.size()) {
+            for (String roundId : roundIdRoundMap.keySet()) {
+                if (!sfRoundIdSet.contains(roundId)) {
+                    newRoundList.add(new Round__c(
+                        Player__r = new Player__c(External_Id__c = roundIdRoundMap.get(roundId).playerId),
+                        Course__r = new Course__c(External_Id__c = roundIdRoundMap.get(roundId).courseId),
+                        External_Id__c = roundId));
+                }
+            }
+            insert newRoundList;
         }
     }
 }

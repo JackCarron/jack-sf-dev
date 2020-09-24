@@ -11,6 +11,7 @@ public with sharing class GOLF_Wrapper {
 
     public class Round {
         public String roundId;
+        public String playerId;
         public String courseId;
         public String course;
         public List<Scorecard> scorecards;
