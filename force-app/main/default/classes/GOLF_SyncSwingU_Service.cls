@@ -12,7 +12,7 @@ public with sharing class GOLF_SyncSwingU_Service {
         for (Player__c player : SWINGU_PLAYER_LIST) {
             if (String.isNotBlank(player.External_Id__c)) {
                 HttpResponse res = makeSwingUPlayerCallout(player.External_Id__c);
-                Golf_Wrapper.Player swingUPlayer = (GOLF_Wrapper.Player) JSON.deserialize(res.getBody(), GOLF_Wrapper.Player.class);
+                GolfWrapper.Player swingUPlayer = (GolfWrapper.Player) JSON.deserialize(res.getBody(), GOLF_Wrapper.Player.class);
                 player.Handicap__c = swingUPlayer.handicap;
             }
         }
@@ -38,21 +38,22 @@ public with sharing class GOLF_SyncSwingU_Service {
         return httpInstance.send(req);
     }
 
-    public List<Golf_Wrapper.Player> getPlayerRoundList() {
-        List<Golf_Wrapper.Player> swingUPlayerRoundList = new List<Golf_Wrapper.Player>();
-        Golf_Wrapper.Player tempPlayer;
+    public List<GolfWrapper.Player> getPlayerRoundList() {
+        List<GolfWrapper.Player> swingUPlayerRoundList = new List<GolfWrapper.Player>();
+        GolfWrapper.Player tempPlayer;
         for (Player__c player : SWINGU_PLAYER_LIST) {
             if (String.isNotBlank(player.External_Id__c)) {
                 HttpResponse res = makeSwingUPlayerRoundCallout(player.External_Id__c);
-                swingUPlayerRoundList.add((GOLF_Wrapper.Player) JSON.deserialize(res.getBody(), GOLF_Wrapper.Player.class));
+                swingUPlayerRoundList.add((GolfWrapper.Player) JSON.deserialize(res.getBody(), GOLF_Wrapper.Player.class));
             }
         }
         return swingUPlayerRoundList;
     }
 
-    public Golf_Wrapper.Round getRoundInfo(String roundId) {
+    public GolfWrapper.Round getRoundInfo(String roundId) {
         HttpResponse res = makeSwingURoundCallout(roundId);
-        GOLF_Wrapper.Round swingUPlayerRound = (GOLF_Wrapper.Round) JSON.deserialize(res.getBody(), GOLF_Wrapper.Round.class);
+        System.debug(res.getBody());
+        GolfWrapper.Round swingUPlayerRound = (GolfWrapper.Round) JSON.deserialize(res.getBody(), GOLF_Wrapper.Round.class);
         System.debug(swingUPlayerRound);
         return swingUPlayerRound;
     }

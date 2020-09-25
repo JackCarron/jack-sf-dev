@@ -1,5 +1,5 @@
-public with sharing class GOLF_Wrapper {
-    public GOLF_Wrapper() {
+public with sharing class GolfWrapper {
+    public GolfWrapper() {
 
     }
 
@@ -14,6 +14,7 @@ public with sharing class GOLF_Wrapper {
         public String playerId;
         public String courseId;
         public String course;
+        public String inserted;
         public List<Scorecard> scorecards;
     }
 
@@ -27,9 +28,11 @@ public with sharing class GOLF_Wrapper {
 
     public class Hole {
         public Integer holeNum;
+        public String courseHoleId;
+        public String scorecardHoleId;
         public Integer par;
         public Integer score;
         public Integer putts;
-        public String strokeIndex;
+        public Integer strokeIndex;
     }
 }
