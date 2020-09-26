@@ -9,18 +9,19 @@
 *          golf data
 */
 
-public with sharing class GOLFSyncSwingUHandler {
-    Set<String> courseIdSet = new Set<String>();
-    Set<String> sfCourseIdSet = new Set<String>();
-    Set<String> sfRoundIdSet = new Set<String>();
-    List<Course__c> newCourseList = new List<Course__c>();
-    List<Round__c> newRoundList = new List<Round__c>();
-    List<Hole__c> newHoleList = new List<Hole__c>();
-    List<RoundHole__c> newRoundHoleList = new List<RoundHole__c>();
-    Map<String,String> courseIdNameMap = new Map<String,String>();
-    Map<String,GolfWrapper.Round> roundIdRoundMap = new Map<String,GolfWrapper.Round>();
+public with sharing class GolfSyncSwingUIngestion {
+    static Set<String> courseIdSet = new Set<String>();
+    static Set<String> sfCourseIdSet = new Set<String>();
+    static Set<String> sfRoundIdSet = new Set<String>();
+    static List<Course__c> newCourseList = new List<Course__c>();
+    static List<Round__c> newRoundList = new List<Round__c>();
+    static List<Hole__c> newHoleList = new List<Hole__c>();
+    static List<RoundHole__c> newRoundHoleList = new List<RoundHole__c>();
+    static Map<String,String> courseIdNameMap = new Map<String,String>();
+    static Map<String,GolfWrapper.Round> roundIdRoundMap = new Map<String,GolfWrapper.Round>();
 
-    public void handleGolfInfo() {
+    @future(callout=true)
+    public static void handleGolfInfo() {
 
         // Query players to add course information for
         List<Player__c> playerList = 

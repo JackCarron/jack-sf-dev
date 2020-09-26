@@ -15,18 +15,11 @@ public with sharing class GolfSyncSwingUService {
     HttpRequest req = new HttpRequest();
     final String GET_METHOD = Label.GET_METHOD;
     final String SWINGU_URL = Label.SWINGU_URL;
-    final String PLAYERS_ENDPOINT = Label.PLAYERS_ENDPOINT;
     final String PLAYER_ROUNDS_ENDPOINT = Label.PLAYER_ROUNDS_ENDPOINT;
     final String ROUND_ENDPOINT = Label.ROUND_ENDPOINT;
 
     public GolfSyncSwingUService(List<Player__c> swingUPlayerList) {
         this.swingUPlayerList = swingUPlayerList;
-    }
-
-    private HttpResponse makeSwingUPlayerCallout(String playerId) {
-        req.setEndpoint(SWINGU_URL + PLAYERS_ENDPOINT + playerId);
-        req.setMethod(GET_METHOD);
-        return httpInstance.send(req);
     }
 
     public HttpResponse makeSwingUPlayerRoundCallout(String playerId) {
