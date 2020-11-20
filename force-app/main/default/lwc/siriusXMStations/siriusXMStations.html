@@ -1,0 +1,31 @@
+<template>
+    <lightning-card title="Sync with Apple Music" icon-name="custom:custom14">
+        <div class="slds-form">
+        <div class="slds-grid slds-gutters slds-wrap">
+            <div class="slds-col slds-size_3-of-6">
+                <ul class="slds-m-around_medium">
+                    <lightning-datatable key-field="key" 
+                                         data={records} 
+                                         columns={columns}
+                                         onrowselection={handleSelection}>
+                    </lightning-datatable>
+                </ul>
+            </div>
+            <div class="slds-col slds-size_2-of-6">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="Cookie-Text-Area">Cookie for Apple Music Callout</label>
+                    <lightning-helptext content="How to get Cookie: 1. Open chrome with network tab open 
+                    2. Navigate to https://music.apple.com/us/browse 3. Look for callout pointing to amp-api (keywords: groupings or children)
+                    3. Then Take Bearer token and cookie and paste into these textboxes"></lightning-helptext>
+                    <div class="slds-form-element__control">
+                      <textarea id="Cookie-Text-Area" placeholder="Enter Cookie Here..." class="slds-textarea"></textarea>
+                    </div>
+                  </div>
+            </div>
+            <div class="slds-col slds-size_2-of-6 slds-m-around_medium">
+                <button class="slds-button slds-button_brand">Sync with Apple Music</button>
+            </div>
+        </div>
+        </div>     
+    </lightning-card>
+</template>
