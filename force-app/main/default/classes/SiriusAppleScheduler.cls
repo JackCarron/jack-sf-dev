@@ -1,6 +1,7 @@
 global with sharing class SiriusAppleScheduler implements Schedulable {
 
     global void execute(SchedulableContext SC) {
-        SiriusXMService.appleMusicCalloutTest();
+        SiriusXMPlaylistBatch batchable = new SiriusXMPlaylistBatch();
+        Database.executeBatch(batchable, 1);
      }
 }

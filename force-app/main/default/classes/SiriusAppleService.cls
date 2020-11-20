@@ -7,7 +7,7 @@ public with sharing class SiriusAppleService {
         Http http = new Http();
 
         while (morePlaylistsExists) {
-            HttpRequest req = getHttpRequest('/v1/me/library/playlists');  
+            HttpRequest req = getHttpRequest(apiEndpoint);  
             req.setMethod('GET');        
             HTTPResponse res = http.send(req);
             SiriusAppleWrapper.AppleWrapper playlistResponse = (SiriusAppleWrapper.AppleWrapper) JSON.deserialize(res.getBody(), SiriusAppleWrapper.AppleWrapper.class); 
@@ -51,10 +51,9 @@ public with sharing class SiriusAppleService {
     }
 
     // default apiEndpoint would be '/v1/me/library/playlists/' + playlistId + '/tracks'
-    public static SiriusAppleWrapper.AppleWrapper getSongsInPlaylist(String stationName, String apiEndpoint) {
+    public static SiriusAppleWrapper.AppleWrapper getSongsInPlaylist(String stationName, String apiEndpoint, String playlistId) {
         Http http = new Http();
-        SiriusAppleWrapper.AppleWrapper playlistResponse;
-        String playlistId = getPlaylistId(stationName);        
+        SiriusAppleWrapper.AppleWrapper playlistResponse;        
         if (String.isNotBlank(playlistId)) {
             HttpRequest req = getHttpRequest(apiEndpoint);
             req.setMethod('GET');        
@@ -77,7 +76,7 @@ public with sharing class SiriusAppleService {
         String apiEndpoint = '/v1/me/library/playlists/' + playlistId + '/tracks';
         SiriusAppleWrapper.AppleWrapper playlistResponse = new SiriusAppleWrapper.AppleWrapper();
         while (morePlaylistSongsAvailable) {
-            playlistResponse = getSongsInPlaylist(stationName, apiEndpoint);
+            playlistResponse = getSongsInPlaylist(stationName, apiEndpoint, playlistId);
             if (playlistResponse.data != null) {
                 for (SiriusAppleWrapper.ApplePlaylist songWrapper : playlistResponse.data) {
                     if (songWrapper.attributes != null && 
@@ -93,7 +92,7 @@ public with sharing class SiriusAppleService {
                         }
                     }
                 }
-
+                System.debug(apiEndpoint);
                 if (newSiriusSongs.isEmpty()) {
                     morePlaylistSongsAvailable = false;
                 }
